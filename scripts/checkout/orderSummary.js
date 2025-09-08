@@ -4,12 +4,8 @@ import { formatCurrency  } from "../utils/money.js";
 import {hello} from 'https://unpkg.com/supersimpledev@1.0.1/hello.esm.js';
 import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js';
 import {deliveryOptions,getDeliveryOption} from '../../data/deliveryOptions.js';
-hello();
+import { renderPaymentSummary } from "./paymentSummary.js";
 
-//use of dayjs EXTERNAL LIBRARY  
-const today=dayjs();
-const deliveryDate=today.add(7,'days');
-console.log(deliveryDate.format('dddd, MMMM D'));
 
 
 export function renderOrderSummary(){
@@ -42,7 +38,7 @@ cart.forEach((cartItem)=>{
 
               <div class="cart-item-details">
                 <div class="product-name">
-                  Black and Gray Athletic Cotton Socks - 6 Pairs
+                 ${matchingProduct.name}
                 </div>
                 <div class="product-price">
                   $${formatCurrency(matchingProduct.priceCents)}
@@ -65,14 +61,14 @@ cart.forEach((cartItem)=>{
               <div class="delivery-options-title">
                 Choose a delivery option:
               </div>
-              ${deliveryOtionsHTML(matchingProduct,cartItem)}
+              ${deliveryOptionsHTML(matchingProduct,cartItem)}
               </div>
             </div>
           </div>`;
 });
 
 
-function deliveryOtionsHTML(matchingProduct,cartItem){
+function deliveryOptionsHTML(matchingProduct,cartItem){
 
   let html='';
   deliveryOptions.forEach((deliveryOption)=>{
@@ -112,6 +108,8 @@ document.querySelectorAll('.js-delete-link').forEach((link)=>{
 
    const conatiner= document.querySelector(`.js-cart-item-container-${productId}`);
     conatiner.remove();
+
+    renderPaymentSummary();
   });
 });
 
@@ -121,6 +119,8 @@ document.querySelectorAll('.js-delivery-option').forEach((element)=>{
       const {productId,deliveryOptionId}=element.dataset;
       updateDeliveryOption(productId,deliveryOptionId);
       renderOrderSummary();
+
+      renderPaymentSummary();
   });
 });
 }
